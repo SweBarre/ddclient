@@ -7,7 +7,10 @@ RGID="${RGID:-$(id -g ddclient)}"
 [[ "$(id -u ddclient)" -ne "$RUID" ]] && usermod -u "$RUID" -o ddclient
 [[ "$(id -g ddclient)" -ne "$RGID" ]] && groupmod -g "$RGID" -o ddclient
 
-[[ ! -f /etc/ddclient/config ]] && mv /etc/ddclient.conf /srv/ddclient/ddclient.conf
+if [[ ! -f /etc/ddclient/config ]]; then
+    cp /etc/ddclient.conf /srv/ddclient/ddclient.conf
+fi
+chmown ddclient /srv/ddclient/ddclient.conf
 
 if [[ "$1" == "reset-permission" ]]; then
   printf "chown -R ddclient:ddclient /srv/ddclient\n"
